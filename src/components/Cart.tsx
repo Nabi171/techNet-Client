@@ -14,7 +14,7 @@ import {
 import { Button } from './ui/button';
 import type { IProduct } from '@/types/globalTypes';
 import { useAppSelector,useAppDispatch } from '../redux/hook';
-import { addToCart } from "../redux/features/cart/cartSlice";
+import { addToCart,removeFromCart,removeOne} from "../redux/features/cart/cartSlice";
 
 export default function Cart() {
 

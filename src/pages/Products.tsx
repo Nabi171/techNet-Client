@@ -7,6 +7,7 @@ import { IProduct } from '@/types/globalTypes';
 import { useAppSelector,useAppDispatch } from '../redux/hook';
 import { useEffect, useState } from 'react';
 import { useGetProductsQuery } from '../redux/api/apiSlice';
+import { setPriceRange } from '../redux/features/products/productSlice';
 
 export default function Products() {
   // const [product,setProduct]=useState()
@@ -77,7 +78,7 @@ const dispatch=useAppDispatch()
         </div>
       </div>
       <div className="col-span-9 grid grid-cols-3 gap-10 pb-20">
-        {data?.data?.map((product:IProduct) => (
+        {productsData?.map((product:IProduct) => (
           <ProductCard product={product} />
           
         ))}
