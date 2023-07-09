@@ -4,47 +4,60 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
 import { IProduct } from '@/types/globalTypes';
+import { useAppSelector,useAppDispatch } from '../redux/hook';
 import { useEffect, useState } from 'react';
+import { useGetProductsQuery } from '../redux/api/apiSlice';
 
 export default function Products() {
-  const [data, setData] = useState<IProduct[]>([]);
-  useEffect(() => {
-    fetch('./data.json')
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  // const [product,setProduct]=useState()
+  // const [data, setData] = useState<IProduct[]>([]);
+  // useEffect(() => {
+  //   fetch('./data.json')
+  //     .then((res) => res.json())
+  //     .then((data) => setData(data));
+  // }, []);
+  const { data, isLoading, error } = useGetProductsQuery(undefined);
+
+// console.log(data?.data)
+
 
   const { toast } = useToast();
 
-  //! Dummy Data
+const {priceRange,status}=useAppSelector((state)=>state.product)
 
-  const status = true;
-  const priceRange = 100;
-
-  //! **
+const dispatch=useAppDispatch()
 
   const handleSlider = (value: number[]) => {
-    console.log(value);
+    dispatch(setPriceRange(value[0]))
   };
 
   let productsData;
 
   if (status) {
-    productsData = data.filter(
-      (item) => item.status === true && item.price < priceRange
+    // console.log('string')
+    productsData = data?.data?.filter(
+      (item: { status: boolean; price: number }) =>
+        item.status === true && item.price < priceRange
     );
   } else if (priceRange > 0) {
-    productsData = data.filter((item) => item.price < priceRange);
+    
+    console.log('number')
+    productsData = data?.data?.filter(
+      (item: { price: number }) => item.price < priceRange
+    );
+    console.log(productsData)
   } else {
-    productsData = data;
+    // cosole.log('helw')
+    productsData = data?.data;
   }
+  // console.log(productsData,data)
 
   return (
     <div className="grid grid-cols-12 max-w-7xl mx-auto relative ">
       <div className="col-span-3 z mr-10 space-y-5 border rounded-2xl border-gray-200/80 p-5 self-start sticky top-16 h-[calc(100vh-80px)]">
         <div>
           <h1 className="text-2xl uppercase">Availability</h1>
-          <div className="flex items-center space-x-2 mt-3">
+          <div onClick={()=>dispatch(toggleState())} className="flex items-center space-x-2 mt-3">
             <Switch id="in-stock" />
             <Label htmlFor="in-stock">In stock</Label>
           </div>
@@ -64,8 +77,9 @@ export default function Products() {
         </div>
       </div>
       <div className="col-span-9 grid grid-cols-3 gap-10 pb-20">
-        {productsData?.map((product) => (
+        {data?.data?.map((product:IProduct) => (
           <ProductCard product={product} />
+          
         ))}
       </div>
     </div>
