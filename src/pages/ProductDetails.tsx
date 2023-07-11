@@ -3,19 +3,25 @@ import { Button } from '@/components/ui/button';
 import { IProduct } from '@/types/globalTypes';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import {useSingleProductQuery} from "../redux/api/apiSlice"
+
 
 export default function ProductDetails() {
   const { id } = useParams();
+// console.log(id)
 
+ const {data:product,isLoading,error}=useSingleProductQuery(id);
+// console.log(isLoading)
+console.log(product)
   //! Temporary code, should be replaced with redux
-  const [data, setData] = useState<IProduct[]>([]);
-  useEffect(() => {
-    fetch('../../public/data.json')
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  // const [data, setData] = useState<IProduct[]>([]);
+  // useEffect(() => {
+  //   fetch('../../public/data.json')
+  //     .then((res) => res.json())
+  //     .then((data) => setData(data));
+  // }, []);
 
-  const product = data?.find((item) => item._id === Number(id));
+  // const product = data?.data?.find((item) => item._id === Number(id));
 
   //! Temporary code ends here
 
